@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\" />
     <Folder Include="wwwroot\Uploads\testimonial_images\" />
     <Folder Include="wwwroot\Uploads\service_images\" />
   </ItemGroup>

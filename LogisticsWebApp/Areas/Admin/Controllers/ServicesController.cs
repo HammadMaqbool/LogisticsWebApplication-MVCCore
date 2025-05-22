@@ -62,14 +62,11 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                string ImageName = Guid.NewGuid().ToString() + "_" + service.Photo.FileName;
+                string ImageName = service.Photo.FileName;
 
-                var FolderPath = Path.Combine(env.WebRootPath, "Uploads/service_images");
-                var ImagePath = Path.Combine(FolderPath, ImageName);
-               
-                var FileStream = new FileStream(ImagePath, FileMode.Create);
-                service.Photo.CopyTo(FileStream);
-
+                var fileStream = ImageService.UploadImage(ImageName, IMAGE_FOLDER_NAME, env);
+                service.Photo.CopyTo(fileStream);
+                fileStream.Dispose();
                 service.ImageUrl = ImageName;
 
                 _context.Add(service);
@@ -120,11 +117,10 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
                     {
                         ImageService.DeleteImage(service.ImageUrl,IMAGE_FOLDER_NAME, env);
 
-                        string ImageName = Guid.NewGuid().ToString() + "_" + service.Photo.FileName;
-                        var FolderPath = Path.Combine(env.WebRootPath, "Uploads/service_images");
-                        var ImagePath = Path.Combine(FolderPath, ImageName);
-                        var FileStream = new FileStream(ImagePath, FileMode.Create);
-                        service.Photo.CopyTo(FileStream);
+                        string ImageName = service.Photo.FileName;
+                        var fileStream = ImageService.UploadImage(ImageName, IMAGE_FOLDER_NAME, env);
+                        service.Photo.CopyTo(fileStream);
+                        fileStream.Dispose();
                         service.ImageUrl = ImageName;
 
                         _context.Update(service);

@@ -18,5 +18,17 @@
             }
         }
 
+
+        public static FileStream UploadImage(string imageName, string folderName, IWebHostEnvironment env)
+        {
+            string ImageName = Guid.NewGuid().ToString() + "_" + imageName;
+            var FolderPath = Path.Combine(env.WebRootPath, $"Uploads/{folderName}");
+            var ImagePath = Path.Combine(FolderPath, ImageName);
+
+            var FileStream = new FileStream(ImagePath, FileMode.Create);
+
+            return FileStream;
+        }
+
     }
 }

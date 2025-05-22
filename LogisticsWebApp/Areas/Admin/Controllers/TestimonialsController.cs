@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LogisticsWebApp.Data;
 using LogisticsWebApp.Models;
+using LogisticsWebApp.Areas.Admin.Services;
 
 namespace LogisticsWebApp.Areas.Admin.Controllers
 {
@@ -15,6 +16,7 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
     {
         private readonly AppDbContext _context;
         public IWebHostEnvironment env { get; set; }
+        private const string IMAGE_FOLDER_NAME = "testimonial_images";
 
         public TestimonialsController(AppDbContext context, IWebHostEnvironment env)
         {
@@ -63,12 +65,10 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
             {
                 string ImageName = testimonial.Phote.FileName.ToString();
 
-                var FolderPath = Path.Combine(env.WebRootPath, "Uploads/testimonial_images");
-                var ImagePath = Path.Combine(FolderPath, ImageName);
+                var fileStream = ImageService.UploadImage(ImageName, IMAGE_FOLDER_NAME, env);
+                testimonial.Phote.CopyTo(fileStream);
+                fileStream.Dispose();
 
-                var FileStream = new FileStream(ImagePath, FileMode.Create);
-                testimonial.Phote.CopyTo(FileStream);
-                FileStream.Dispose();
 
                 testimonial.ImageUrl = ImageName;
 
@@ -111,8 +111,28 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(testimonial);
-                    await _context.SaveChangesAsync();
+
+                    if (testimonial.Phote != null)
+                    {
+                        ImageService.DeleteImage(testimonial.ImageUrl, IMAGE_FOLDER_NAME, env);
+
+                        string ImageName = testimonial.Phote.FileName;
+                        var fileStream = ImageService.UploadImage(ImageName, IMAGE_FOLDER_NAME, env);
+                        testimonial.Phote.CopyTo(fileStream);
+                        fileStream.Dispose();
+                        testimonial.ImageUrl = ImageName;
+
+                        _context.Update(testimonial);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        _context.Update(testimonial);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
