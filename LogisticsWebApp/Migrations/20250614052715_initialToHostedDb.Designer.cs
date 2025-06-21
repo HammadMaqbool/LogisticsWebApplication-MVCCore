@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogisticsWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250517051147_initial")]
-    partial class initial
+    [Migration("20250614052715_initialToHostedDb")]
+    partial class initialToHostedDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -366,6 +366,31 @@ namespace LogisticsWebApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tbl_Track");
+                });
+
+            modelBuilder.Entity("LogisticsWebApp.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_User");
                 });
 
             modelBuilder.Entity("LogisticsWebApp.Models.PackageMapper", b =>

@@ -7,12 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LogisticsWebApp.Data;
 using LogisticsWebApp.Models;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LogisticsWebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class ContactUsController : Controller
     {
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (HttpContext?.Session.GetString("flag") != "true")
+            {
+           
+                context.Result = new RedirectResult("/Admin/Login/Index");
+            }
+            base.OnActionExecuting(context);
+        }
+
         private readonly AppDbContext _context;
 
         public ContactUsController(AppDbContext context)
@@ -79,6 +92,19 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpPost]
+        public IActionResult SendMessage(ContactUs contact)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.tbl_ContactUs.Add(contact);
+                _context.SaveChanges();
+                return RedirectToAction("Contact", "Home");
+            }
+            return View(contact);
         }
 
     }

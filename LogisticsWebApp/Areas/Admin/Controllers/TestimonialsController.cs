@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LogisticsWebApp.Data;
 using LogisticsWebApp.Models;
 using LogisticsWebApp.Areas.Admin.Services;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LogisticsWebApp.Areas.Admin.Controllers
 {
@@ -15,6 +16,14 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
     public class TestimonialsController : Controller
     {
         private readonly AppDbContext _context;
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (HttpContext?.Session.GetString("flag") != "true")
+            {
+                context.Result = new RedirectResult("/Admin/Login/Index");
+            }
+            base.OnActionExecuting(context);
+        }
         public IWebHostEnvironment env { get; set; }
         private const string IMAGE_FOLDER_NAME = "testimonial_images";
 

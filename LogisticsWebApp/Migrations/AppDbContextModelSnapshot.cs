@@ -365,6 +365,31 @@ namespace LogisticsWebApp.Migrations
                     b.ToTable("tbl_Track");
                 });
 
+            modelBuilder.Entity("LogisticsWebApp.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_User");
+                });
+
             modelBuilder.Entity("LogisticsWebApp.Models.PackageMapper", b =>
                 {
                     b.HasOne("LogisticsWebApp.Models.PackagePlane", "PackagePlane")

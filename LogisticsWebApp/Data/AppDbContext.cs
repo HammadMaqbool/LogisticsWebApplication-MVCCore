@@ -23,5 +23,6 @@ public class AppDbContext : DbContext
     public DbSet<Testimonial> tbl_Testimonial { get; set; }
     public DbSet<Track> tbl_Track { get; set; }
     public DbSet<PackageMapper> tbl_PackageMapper { get; set; }
+    public DbSet<User> tbl_User { get; set; }
 
 }

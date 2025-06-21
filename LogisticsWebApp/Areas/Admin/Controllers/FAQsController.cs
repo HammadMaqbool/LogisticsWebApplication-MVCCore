@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LogisticsWebApp.Data;
 using LogisticsWebApp.Models;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LogisticsWebApp.Areas.Admin.Controllers
 {
@@ -14,6 +15,15 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
     public class FAQsController : Controller
     {
         private readonly AppDbContext _context;
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (HttpContext?.Session.GetString("flag") != "true")
+            {
+                context.Result = new RedirectResult("/Admin/Login/Index");
+            }
+            base.OnActionExecuting(context);
+        }
 
         public FAQsController(AppDbContext context)
         {

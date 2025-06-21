@@ -5,7 +5,7 @@
 namespace LogisticsWebApp.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initialToHostedDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -190,6 +190,21 @@ namespace LogisticsWebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "tbl_User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tbl_User", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "tbl_PackageMapper",
                 columns: table => new
                 {
@@ -258,6 +273,9 @@ namespace LogisticsWebApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "tbl_Track");
+
+            migrationBuilder.DropTable(
+                name: "tbl_User");
 
             migrationBuilder.DropTable(
                 name: "tbl_PackagePlaneProperties");

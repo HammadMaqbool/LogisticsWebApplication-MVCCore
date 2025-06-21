@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LogisticsWebApp.Data;
 using LogisticsWebApp.Models;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LogisticsWebApp.Areas.Admin.Controllers
 {
@@ -14,6 +15,15 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
     public class QuotesController : Controller
     {
         private readonly AppDbContext _context;
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (HttpContext?.Session.GetString("flag") != "true")
+            {
+                context.Result = new RedirectResult("/Admin/Login/Index");
+            }
+            base.OnActionExecuting(context);
+        }
 
         public QuotesController(AppDbContext context)
         {
@@ -55,7 +65,7 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Origin,Destination,Weight,Dimension,Name,Email,Phone,Message")] Quote quote)
+        public async Task<IActionResult> Create(Quote quote)
         {
             if (ModelState.IsValid)
             {

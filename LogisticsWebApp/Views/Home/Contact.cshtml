@@ -1,9 +1,11 @@
 ﻿
+@model ContactViewModel
+
     <!-- Page Title -->
 <div class="page-title dark-background" data-aos="fade" style="background-image: url(FrontEnd/assets/img/page-title-bg.jpg);">
         <div class="container position-relative">
             <h1>Contact</h1>
-            <p>Esse dolorum voluptatum ullam est sint nemo et est ipsa porro placeat quibusdam quia assumenda numquam molestias.</p>
+            <p>You can contact us through the contact us form Or for instant contact please contact us on the given number, email address</p>
             <nav class="breadcrumbs">
                 <ol>
                     <li><a href="index.html">Home</a></li>
@@ -28,7 +30,7 @@
                         <i class="bi bi-geo-alt flex-shrink-0"></i>
                         <div>
                             <h3>Address</h3>
-                            <p>A108 Adam Street, New York, NY 535022</p>
+                            <p>@Model._Profile.Address</p>
                         </div>
                     </div><!-- End Info Item -->
 
@@ -36,7 +38,7 @@
                         <i class="bi bi-telephone flex-shrink-0"></i>
                         <div>
                             <h3>Call Us</h3>
-                            <p>+1 5589 55488 55</p>
+                            <p>@Model._Profile.Phone</p>
                         </div>
                     </div><!-- End Info Item -->
 
@@ -44,37 +46,34 @@
                         <i class="bi bi-envelope flex-shrink-0"></i>
                         <div>
                             <h3>Email Us</h3>
-                            <p>info@example.com</p>
+                            <p>@Model._Profile.Email</p>
                         </div>
                     </div><!-- End Info Item -->
 
                 </div>
 
                 <div class="col-lg-8">
-                    <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                <form asp-controller="ContactUs" asp-area="Admin" asp-action="SendMessage" method="post" data-aos="fade-up" data-aos-delay="200">
                         <div class="row gy-4">
 
                             <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+                                <input asp-for="@Model._Contact.Name" name="name" class="form-control" placeholder="Your Name" required="">
                             </div>
 
                             <div class="col-md-6 ">
-                                <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+                            <input asp-for="@Model._Contact.Email"  class="form-control" name="email" placeholder="Your Email" required="">
                             </div>
 
                             <div class="col-md-12">
-                                <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+                            <input asp-for="@Model._Contact.Subject" class="form-control" name="subject" placeholder="Subject" required="">
                             </div>
 
                             <div class="col-md-12">
-                                <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                            <textarea class="form-control" asp-for="@Model._Contact.Message" name="message" rows="6" placeholder="Message" required=""></textarea>
                             </div>
 
                             <div class="col-md-12 text-center">
-                                <div class="loading">Loading</div>
-                                <div class="error-message"></div>
-                                <div class="sent-message">Your message has been sent. Thank you!</div>
-
+                                
                                 <button type="submit">Send Message</button>
                             </div>
 

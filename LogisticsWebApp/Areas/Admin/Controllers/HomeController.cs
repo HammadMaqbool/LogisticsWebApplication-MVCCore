@@ -1,5 +1,6 @@
 ﻿using LogisticsWebApp.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LogisticsWebApp.Areas.Admin.Controllers
 {
@@ -7,6 +8,15 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (HttpContext?.Session.GetString("flag") != "true")
+            {
+                context.Result = new RedirectResult("/Admin/Login/Index");
+            }
+            base.OnActionExecuting(context);
+        }
 
         public int NumberOfServices { get; set; }
         public int NumberOfTestimonials { get; set; }

@@ -9,6 +9,7 @@ using LogisticsWebApp.Data;
 using LogisticsWebApp.Models;
 using Microsoft.Identity.Client;
 using LogisticsWebApp.Areas.Admin.Services;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LogisticsWebApp.Areas.Admin.Controllers
 {
@@ -17,11 +18,22 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
     {
         private readonly AppDbContext _context;
         IWebHostEnvironment env;
-
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (HttpContext?.Session.GetString("flag") != "true")
+            {
+                context.Result = new RedirectResult("/Admin/Login/Index");
+            }
+            base.OnActionExecuting(context);
+        }
         private const string IMAGE_FOLDER_NAME = "service_images";
+
+        
 
         public ServicesController(AppDbContext context, IWebHostEnvironment _env)
         {
+            
+
             _context = context;
             env = _env;
         }
@@ -62,7 +74,7 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                string ImageName = service.Photo.FileName;
+                string ImageName = Guid.NewGuid().ToString() + "_" + service.Photo.FileName;
 
                 var fileStream = ImageService.UploadImage(ImageName, IMAGE_FOLDER_NAME, env);
                 service.Photo.CopyTo(fileStream);
@@ -117,7 +129,7 @@ namespace LogisticsWebApp.Areas.Admin.Controllers
                     {
                         ImageService.DeleteImage(service.ImageUrl,IMAGE_FOLDER_NAME, env);
 
-                        string ImageName = service.Photo.FileName;
+                        string ImageName = Guid.NewGuid().ToString() + "_" + service.Photo.FileName;
                         var fileStream = ImageService.UploadImage(ImageName, IMAGE_FOLDER_NAME, env);
                         service.Photo.CopyTo(fileStream);
                         fileStream.Dispose();
